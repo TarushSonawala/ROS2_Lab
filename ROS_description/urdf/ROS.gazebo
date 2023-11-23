@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+<robot name="ROS" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+<!-- Define individual colors for each link -->
+<xacro:property name="base_link_color" value="Gazebo/Red" />
+<xacro:property name="left_link_1_color" value="Gazebo/Blue" />
+<xacro:property name="right_link_1_color" value="Gazebo/Blue" />
+<xacro:property name="lidar_1_color" value="Gazebo/Yellow" />
+
+<gazebo>
+  <plugin name="control" filename="libgazebo_ros_control.so"/>
+</gazebo>
+
+<!-- Use the individual color for each link -->
+<gazebo reference="base_link">
+  <material>${base_link_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+  <gravity>true</gravity>
+</gazebo>
+
+<gazebo reference="left_link_1">
+  <material>${left_link_1_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="right_link_1">
+  <material>${right_link_1_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+<gazebo reference="lidar_1">
+  <material>${lidar_1_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <self_collide>true</self_collide>
+</gazebo>
+
+</robot>

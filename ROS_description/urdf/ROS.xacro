@@ -1,0 +1,162 @@
+<?xml version="1.0" ?>
+<robot name="ROS" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find ROS_description)/urdf/materials.xacro" />
+<xacro:include filename="$(find ROS_description)/urdf/ROS.trans" />
+<xacro:include filename="$(find ROS_description)/urdf/ROS.gazebo" />
+<link name="base_link">
+  <inertial>
+    <origin xyz="-0.004334391860998321 -0.0005636448423668676 0.05223478787909594" rpy="0 0 0"/>
+    <mass value="2.107074069849857"/>
+    <inertia ixx="0.007185" iyy="0.006854" izz="0.012877" ixy="3e-06" iyz="-3e-06" ixz="0.000201"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find ROS_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find ROS_description)/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="left_link_1">
+  <inertial>
+    <origin xyz="4.5070576519968403e-07 0.015000062845261536 6.938893903907228e-18" rpy="0 0 0"/>
+    <mass value="1.8496126748009902"/>
+    <inertia ixx="0.001295" iyy="0.002312" izz="0.001295" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.007669 -0.109356 -0.05" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find ROS_description)/meshes/left_link_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.007669 -0.109356 -0.05" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find ROS_description)/meshes/left_link_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="right_link_1">
+  <inertial>
+    <origin xyz="4.5070576519968403e-07 -0.015000062845261564 6.938893903907228e-18" rpy="0 0 0"/>
+    <mass value="1.8496126748009902"/>
+    <inertia ixx="0.001295" iyy="0.002312" izz="0.001295" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.007669 0.109356 -0.05" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find ROS_description)/meshes/right_link_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.007669 0.109356 -0.05" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find ROS_description)/meshes/right_link_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="lidar_1">
+  <inertial>
+    <origin xyz="-6.938893903907228e-18 -6.959162379954361e-18 0.009999999999999995" rpy="0 0 0"/>
+    <mass value="0.08290663012823465"/>
+    <inertia ixx="3e-05" iyy="3e-05" izz="5.4e-05" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.04 -0.0 -0.1" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find ROS_description)/meshes/lidar_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0.04 -0.0 -0.1" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="file://$(find ROS_description)/meshes/lidar_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="wheel_left_joint" type="continuous">
+  <origin xyz="-0.007669 0.109356 0.05" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="left_link_1"/>
+  <axis xyz="0.0 1.0 0.0"/>
+</joint>
+
+<joint name="wheel_right_joint" type="continuous">
+  <origin xyz="-0.007669 -0.109356 0.05" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="right_link_1"/>
+  <axis xyz="0.0 -1.0 0.0"/>
+</joint>
+
+<joint name="lidar_joint" type="fixed">
+  <origin xyz="-0.04 0.0 0.1" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="lidar_1"/>
+  <axis xyz="0.0 0.0 1.0"/>
+</joint>
+
+
+
+<gazebo>
+    <plugin filename="libgazebo_ros_diff_drive.so" name="gazebo_base_controller">
+      <odometry_frame>odom</odometry_frame>
+      <commandTopic>cmd_vel</commandTopic>
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+      <update_rate>15.0</update_rate>
+
+      <left_joint>wheel_left_joint</left_joint>
+      <right_joint>wheel_right_joint</right_joint>
+      
+      <wheel_separation>0.5</wheel_separation>
+      <wheel_diameter>0.3</wheel_diameter>
+      <max_wheel_acceleration>0.7</max_wheel_acceleration>
+      <max_wheel_torque>8</max_wheel_torque>
+      <robotBaseFrame>base_link</robotBaseFrame>
+    </plugin>
+</gazebo>
+    
+
+<!--lidar plugin-->
+    <gazebo reference="lidar_1">
+      <sensor name="lidar_1" type="ray">
+        <visualize>true</visualize>
+        <update_rate>12.0</update_rate>
+        <plugin filename="libgazebo_ros_ray_sensor.so" name="gazebo_lidar">    
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <frame_name>lidar</frame_name>
+        </plugin>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>360</samples>
+              <resolution>1</resolution>
+              <min_angle>0.00</min_angle>
+              <max_angle>3.14</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.120</min>
+            <max>3.5</max>
+            <resolution>0.015</resolution>
+          </range>
+        </ray>
+      </sensor>
+    </gazebo>
+
+
+</robot>
